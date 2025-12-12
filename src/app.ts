@@ -7,6 +7,7 @@ import { StatusCodes } from "http-status-codes";
 import { setupSwagger } from "./swagger.js";
 import notFound from "./app/middlewares/notFound.js";
 import { router } from "./app/routes/index.js";
+import { globalErrorHandler } from "./app/middlewares/globalErrorHandler.js";
 
 const app: Application = express();
 
@@ -56,7 +57,7 @@ app.get("/", (_req: Request, res: Response) => {
 });
 
 // Global Error Handler
-// app.use(globalErrorHandler);
+app.use(globalErrorHandler);
 // Not Found Handler
 app.use(notFound);
 
