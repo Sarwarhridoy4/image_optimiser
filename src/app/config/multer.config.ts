@@ -1,20 +1,27 @@
-// src/app/config/multer.config.ts
-
 import multer from "multer";
 import path from "path";
+import fs from "fs";
 import { fileFilter } from "./multerFileFilter.js";
 
 /**
+ * Ensure uploads folder exists
+ */
+const uploadDir = path.join(__dirname, "../../uploads");
+
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+  console.log(`✅ Upload folder created at: ${uploadDir}`);
+}
+
+/**
  * Configure Multer to store files on disk
- * Destination: ./uploads (you can change it)
  * Filename: sanitized + timestamp to avoid collisions
  */
 const storage = multer.diskStorage({
   destination: (_req, _file, cb) => {
-    cb(null, path.join(__dirname, "../../uploads")); // Make sure this folder exists
+    cb(null, uploadDir);
   },
   filename: (_req, file, cb) => {
-    // Sanitize filename: lowercase, replace spaces with dash, append timestamp
     const ext = path.extname(file.originalname);
     const name = path
       .basename(file.originalname, ext)
