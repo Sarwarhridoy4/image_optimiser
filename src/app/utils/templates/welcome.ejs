@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Welcome to <%= appName %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #f4f6f8;
+        font-family: Arial, Helvetica, sans-serif;
+        color: #333333;
+      }
+
+      .wrapper {
+        width: 100%;
+        padding: 40px 0;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: #ffffff;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+      }
+
+      .header {
+        background: linear-gradient(135deg, #4f46e5, #6366f1);
+        padding: 30px;
+        text-align: center;
+        color: #ffffff;
+      }
+
+      .header h1 {
+        margin: 0;
+        font-size: 26px;
+        font-weight: 600;
+      }
+
+      .content {
+        padding: 35px 30px;
+      }
+
+      .content h2 {
+        margin-top: 0;
+        font-size: 22px;
+        color: #111827;
+      }
+
+      .content p {
+        line-height: 1.6;
+        font-size: 15px;
+        margin: 14px 0;
+      }
+
+      .btn {
+        display: inline-block;
+        margin-top: 24px;
+        padding: 12px 28px;
+        background-color: #4f46e5;
+        color: #ffffff !important;
+        text-decoration: none;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 15px;
+      }
+
+      .features {
+        margin-top: 30px;
+        padding: 20px;
+        background: #f9fafb;
+        border-radius: 8px;
+      }
+
+      .features ul {
+        margin: 0;
+        padding-left: 18px;
+        font-size: 14px;
+      }
+
+      .features li {
+        margin-bottom: 8px;
+      }
+
+      .footer {
+        text-align: center;
+        padding: 22px;
+        font-size: 12px;
+        color: #6b7280;
+        background: #f9fafb;
+      }
+
+      .footer a {
+        color: #4f46e5;
+        text-decoration: none;
+      }
+
+      @media (max-width: 600px) {
+        .content {
+          padding: 25px 20px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <div class="container">
+        <!-- Header -->
+        <div class="header">
+          <h1>Welcome to <%= appName %> 🎉</h1>
+        </div>
+
+        <!-- Body -->
+        <div class="content">
+          <h2>Hello <%= name %>,</h2>
+
+          <p>
+            We’re excited to have you on board! Your account has been
+            successfully created, and you’re now ready to explore everything
+            <strong><%= appName %></strong> has to offer.
+          </p>
+
+          <p>
+            Get started by logging in to your dashboard and completing your
+            profile.
+          </p>
+
+          <a href="<%= loginUrl %>" class="btn">Go to Dashboard</a>
+
+          <!-- Optional feature highlights -->
+          <div class="features">
+            <p><strong>What you can do next:</strong></p>
+            <ul>
+              <li>Manage your account and profile securely</li>
+              <li>Upload and verify your documents</li>
+              <li>Access exclusive features and tools</li>
+            </ul>
+          </div>
+
+          <p style="margin-top: 30px">
+            If you have any questions or need assistance, feel free to contact
+            our support team anytime.
+          </p>
+
+          <p>
+            Cheers,<br />
+            <strong>The <%= appName %> Team</strong>
+          </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+          <p>
+            © <%= new Date().getFullYear() %> <%= appName %>. All rights reserved.
+          </p>
+          <p>
+            Need help?
+            <a href="mailto:<%= supportEmail %>"><%= supportEmail %></a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
+
