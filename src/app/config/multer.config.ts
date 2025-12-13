@@ -1,7 +1,7 @@
 import multer from "multer";
 import path from "path";
 import fs from "fs";
-import { fileFilter } from "./multerFileFilter.js";
+import { fileFilter } from "../middlewares/multerFileFilter.js";
 
 /**
  * Ensure uploads folder exists
