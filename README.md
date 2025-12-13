@@ -4,12 +4,20 @@ This document describes all available authentication and user-related API endpoi
 
 ---
 
+## Swagger Docs
+
+```
+
+http://localhost:5500/api-docs/
+
+```
+
 ## Base URL
 
 ```
 /api/v1
 ```
-## Swagger Docs: http://localhost:5500/api-docs
+
 ---
 
 ## Authentication Endpoints
@@ -206,4 +214,92 @@ All APIs follow a standard response format:
 
 ---
 
-**Maintained By:** Sarwar Hossain
+**Maintained By:** Backend Team
+
+---
+
+## ▶️ Running the Project
+
+You can run this project using **Bun** or **npm**.
+
+---
+
+### 🔹 Using Bun (Recommended)
+
+#### 1. Install Bun
+
+```bash
+curl -fsSL https://bun.sh/install | bash
+```
+
+Restart your terminal after installation.
+
+#### 2. Install dependencies
+
+```bash
+bun install
+```
+
+#### 3. Setup environment variables
+
+```bash
+cp .env.example .env
+```
+
+Fill in required values (MongoDB, Cloudinary, JWT, Email SMTP).
+
+#### 4. Run in development
+
+```bash
+bun run dev
+```
+
+#### 5. Run in production
+
+```bash
+bun run build
+bun run start
+```
+
+---
+
+### 🔹 Using npm
+
+#### 1. Install dependencies
+
+```bash
+npm install
+```
+
+#### 2. Setup environment variables
+
+```bash
+cp .env.example .env
+```
+
+#### 3. Run in development
+
+```bash
+npm run dev
+```
+
+#### 4. Build & run in production
+
+```bash
+npm run build
+npm run start
+```
+
+---
+
+### 🔹 Default Scripts
+
+```json
+{
+  "dev": "tsx watch src/server.ts",
+  "build": "tsc",
+  "start": "node dist/server.js"
+}
+```
+
+---
