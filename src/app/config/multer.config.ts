@@ -23,6 +23,8 @@ const storage = multer.diskStorage({
   },
   filename: (_req, file, cb) => {
     const ext = path.extname(file.originalname);
+    //for debugging
+    console.log(`Uploading file: ${file.originalname}`);
     const name = path
       .basename(file.originalname, ext)
       .toLowerCase()

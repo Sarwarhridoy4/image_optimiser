@@ -1,4 +1,4 @@
-# EJS Usages
+# EJS Usages Example
 
 ```code
 await sendEmail({
