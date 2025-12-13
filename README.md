@@ -9,7 +9,7 @@ This document describes all available authentication and user-related API endpoi
 ```
 /api/v1
 ```
-
+## Swagger Docs: http://localhost:5500/api-docs
 ---
 
 ## Authentication Endpoints
