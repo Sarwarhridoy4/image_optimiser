@@ -1,30 +1,41 @@
 import multer from "multer";
 import path from "path";
 import fs from "fs";
+import { fileURLToPath } from "url";
 import { fileFilter } from "../middlewares/multerFileFilter.js";
 
 /**
- * Ensure uploads folder exists
+ * ESM-safe __dirname
  */
-const uploadDir = path.join(__dirname, "../../uploads");
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
+/**
+ * Absolute upload directory (project root /uploads)
+ * DO NOT place uploads inside /src
+ */
+const uploadDir = path.resolve(process.cwd(), "uploads");
+
+/**
+ * Ensure uploads folder exists BEFORE Multer runs
+ */
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
-  console.log(`✅ Upload folder created at: ${uploadDir}`);
+  console.log(`Upload folder created at: ${uploadDir}`);
 }
 
 /**
- * Configure Multer to store files on disk
- * Filename: sanitized + timestamp to avoid collisions
+ * Multer disk storage configuration
  */
 const storage = multer.diskStorage({
   destination: (_req, _file, cb) => {
     cb(null, uploadDir);
   },
+
   filename: (_req, file, cb) => {
     const ext = path.extname(file.originalname);
-    //for debugging
-    console.log(`Uploading file: ${file.originalname}`);
+
+    // Sanitize filename
     const name = path
       .basename(file.originalname, ext)
       .toLowerCase()
@@ -37,10 +48,7 @@ const storage = multer.diskStorage({
 });
 
 /**
- * Multer configuration
- * - Disk storage
- * - File size limit 10MB
- * - Optional file type validation
+ * Final Multer instance
  */
 export const multerUpload = multer({
   storage,
@@ -49,3 +57,8 @@ export const multerUpload = multer({
     fileSize: 10 * 1024 * 1024, // 10MB
   },
 });
+
+/**
+ * Optional: export uploadDir for static serving
+ */
+export { uploadDir };

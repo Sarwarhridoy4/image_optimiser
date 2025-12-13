@@ -1,5 +1,5 @@
-import { v2 as cloudinary } from "cloudinary";
 import envConfig from "./env.js";
+import { v2 as cloudinary } from "cloudinary";
 
 /**
  * Cloudinary Configuration

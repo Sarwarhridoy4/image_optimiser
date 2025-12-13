@@ -1,6 +1,8 @@
 import type { Request, Response, NextFunction } from "express";
 import sharp from "sharp";
 import { PDFDocument } from "pdf-lib";
+import fs from "fs/promises";
+import path from "path";
 
 export const compressFile = async (
   req: Request,
@@ -8,33 +10,43 @@ export const compressFile = async (
   next: NextFunction
 ) => {
   try {
-    if (!req.file) return next();
+    if (!req.files) return next();
 
-    const mime = req.file.mimetype;
+    const files = req.files as {
+      profilePic?: Express.Multer.File[];
+      certificatePdf?: Express.Multer.File[];
+    };
 
-    if (mime.startsWith("image")) {
-      // Image → compress to WebP
-      req.file.originalname = req.file.originalname.replace(
-        /\.[^/.]+$/,
-        ".webp"
-      );
+    /* ---------- PROFILE PIC ---------- */
+    if (files.profilePic?.[0]) {
+      const image = files.profilePic[0];
 
-      const compressedBuffer = await sharp(req.file.buffer)
+      const inputBuffer = await fs.readFile(image.path);
+
+      const compressedBuffer = await sharp(inputBuffer)
         .webp({ quality: 80 })
         .toBuffer();
 
-      req.processedFileBuffer = compressedBuffer;
-    } else if (mime === "application/pdf") {
-      // PDF → compress/rewrite using pdf-lib
-      const pdfDoc = await PDFDocument.load(req.file.buffer);
+      req.profilePicBuffer = compressedBuffer;
+      req.profilePicFilename = path
+        .basename(image.originalname, path.extname(image.originalname))
+        .toLowerCase()
+        .replace(/\s+/g, "-") + ".webp";
+    }
+
+    /* ---------- CERTIFICATE PDF ---------- */
+    if (files.certificatePdf?.[0]) {
+      const pdf = files.certificatePdf[0];
+
+      const inputBuffer = await fs.readFile(pdf.path);
+
+      const pdfDoc = await PDFDocument.load(inputBuffer);
       const compressedPdf = await pdfDoc.save({
-        useObjectStreams: true, // helps reduce size
+        useObjectStreams: true,
       });
 
-      req.processedFileBuffer = Buffer.from(compressedPdf);
-    } else {
-      // Other files → leave as-is
-      req.processedFileBuffer = req.file.buffer;
+      req.certificatePdfBuffer = Buffer.from(compressedPdf);
+      req.certificatePdfFilename = pdf.originalname;
     }
 
     next();
@@ -42,3 +54,4 @@ export const compressFile = async (
     next(error);
   }
 };
+

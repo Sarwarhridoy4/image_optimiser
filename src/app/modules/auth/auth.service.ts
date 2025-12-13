@@ -23,6 +23,8 @@ const UserSignupService = {
     certificateBuffer: Buffer,
     certificateOriginalName: string
   ) => {
+    // console.log("profile_pic", profilePicBuffer);
+    // console.log("pdf buffer", certificateBuffer);
     if (!profilePicBuffer || !profilePicOriginalName) {
       throw new AppError(
         StatusCodes.BAD_REQUEST,

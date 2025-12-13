@@ -6,25 +6,26 @@ import { authServices } from "./auth.service.js";
 import { setAuthCookie } from "../../utils/setCookie.js";
 
 const registerUser = catchAsync(async (req: Request, res: Response) => {
-  const processedFiles = req.processedFiles || {};
+  // Get processed/compressed buffers and filenames from compressFile middleware
+  const profilePicBuffer = req.profilePicBuffer;
+  const certificateBuffer = req.certificatePdfBuffer;
 
-  const profilePicBuffer = processedFiles["profilePic"];
-  const certificateBuffer = processedFiles["certificatePdf"];
+  const profileOriginalName = req.profilePicFilename;
+  const certificateOriginalName = req.certificatePdfFilename;
 
-  const profileOriginalName =
-    req.files && !Array.isArray(req.files)
-      ? req.files["profilePic"]?.[0]?.originalname
-      : undefined;
-  const certificateOriginalName =
-    req.files && !Array.isArray(req.files)
-      ? req.files["certificatePdf"]?.[0]?.originalname
-      : undefined;
+  if (!profilePicBuffer || !certificateBuffer) {
+    res.status(StatusCodes.BAD_REQUEST).json({
+      success: false,
+      message: "Profile picture and certificate PDF are required",
+    });
+    return;
+  }
 
   const user = await authServices.UserSignupService.register(
     req.body,
-    profilePicBuffer as Buffer,
+    profilePicBuffer,
     profileOriginalName as string,
-    certificateBuffer as Buffer,
+    certificateBuffer,
     certificateOriginalName as string
   );
 
