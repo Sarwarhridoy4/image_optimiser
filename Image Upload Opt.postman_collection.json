@@ -1,0 +1,103 @@
+{
+	"info": {
+		"_postman_id": "3c512836-029a-496c-ab36-70a04c294421",
+		"name": "Image Upload Opt",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29651957",
+		"_collection_link": "https://nextwebteam.postman.co/workspace/SB-development~2c96d9dd-c8fa-4e27-b08d-a0535c678e94/collection/29651957-3c512836-029a-496c-ab36-70a04c294421?action=share&source=collection_link&creator=29651957"
+	},
+	"item": [
+		{
+			"name": "Get All User(Admin)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/users",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"Admin@123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/auth/login",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Registration",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "Test User",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "hodok15764@discounp.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "hodok15764@discounp.com",
+							"type": "text"
+						},
+						{
+							"key": "profilePic",
+							"type": "file",
+							"src": "/home/sarwar/Pictures/Screenshots/Screenshot From 2025-12-13 16-15-42.png"
+						},
+						{
+							"key": "certificatePdf",
+							"type": "file",
+							"src": "/home/sarwar/Downloads/pdf-sample_0.pdf"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{URL}}/auth/register",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
