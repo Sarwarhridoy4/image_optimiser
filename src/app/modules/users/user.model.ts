@@ -1,9 +1,7 @@
-import { Schema, model } from "mongoose";
-import type { IUser } from "./user.interface.js";
+// src/app/modules/user/user.model.ts
+import { Schema, model, Types } from "mongoose";
+import { UserRole, type IUser } from "./user.interface.js";
 
-/**
- * Mongoose User Schema
- */
 const userSchema = new Schema<IUser>(
   {
     name: {
@@ -27,27 +25,23 @@ const userSchema = new Schema<IUser>(
       type: String,
       required: [true, "Password is required"],
       minlength: 6,
-      select: false, // prevent returning password in queries
+      select: false,
     },
 
-    profilePic: {
+    role: {
       type: String,
-      required: [true, "Profile picture is required"],
+      enum: UserRole,
+      default: UserRole.USER,
     },
 
-    certificatePdf: {
-      type: String,
-      required: [true, "Certificate PDF file is required"],
+    profile: {
+      type: Types.ObjectId,
+      ref: "UserProfile",
     },
   },
   {
     timestamps: true,
   }
 );
-
-/**
- * Index for faster lookup by email
- */
-userSchema.index({ email: 1 });
 
 export const User = model<IUser>("User", userSchema);

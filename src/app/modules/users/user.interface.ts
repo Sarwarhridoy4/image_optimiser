@@ -1,12 +1,16 @@
-/**
- * TypeScript Interface for User Document
- */
-export interface IUser extends Document {
+import { Types } from "mongoose";
+
+export enum UserRole {
+  ADMIN = "ADMIN",
+  USER = "USER",
+}
+
+export interface IUser {
   name: string;
   email: string;
   password: string;
-  profilePic: string;       // Cloudinary secure URL (Required)
-  certificatePdf: string;   // Cloudinary secure URL (Required)
+  role: UserRole;
+  profile: Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
 }

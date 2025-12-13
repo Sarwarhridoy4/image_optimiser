@@ -3,8 +3,7 @@ import { Server } from "http";
 import mongoose from "mongoose";
 import envConfig from "./app/config/env.js";
 import app from "./app.js";
-
-
+import { seedAdmin } from "./app/utils/adminSeeder.js";
 
 let server: Server;
 
@@ -23,7 +22,7 @@ const startServer = async () => {
 
 startServer();
 (async () => {
-//   await seedAdmin();
+  await seedAdmin();
 })();
 
 const gracefulShutdown = (signal: string) => {
