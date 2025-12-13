@@ -1,7 +1,7 @@
 import type { UploadApiResponse } from "cloudinary";
 import stream from "stream";
-import { v2 as cloudinary } from "cloudinary";
 import AppError from "../errorHelpers/AppError.js";
+import { cloudinaryUpload } from "../config/cloudinary.config.js";
 
 /**
  * Uploads a raw buffer to Cloudinary using a stream.
@@ -42,7 +42,7 @@ export const uploadBufferToCloudinary = async (
       const pass = new stream.PassThrough();
       pass.end(buffer);
 
-      cloudinary.uploader
+      cloudinaryUpload.uploader
         .upload_stream(
           {
             public_id,
@@ -105,7 +105,7 @@ export const deleteImageFromCloudinary = async (
   let attempt = 0;
 
   const deleteOnce = async () => {
-    const result = await cloudinary.uploader.destroy(public_id);
+    const result = await cloudinaryUpload.uploader.destroy(public_id);
     if (result.result !== "ok" && result.result !== "not found") {
       throw new AppError(
         500,
