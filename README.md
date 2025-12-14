@@ -8,8 +8,8 @@ This document describes all available authentication and user-related API endpoi
 
 ```
 
-http://localhost:5500/api-docs/
-
+http://localhost:5500/api-docs
+https://image-compress-upload.vercel.app/api-docs
 ```
 
 ## Base URL
