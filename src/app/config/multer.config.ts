@@ -1,54 +1,16 @@
 import multer from "multer";
-import path from "path";
-import fs from "fs";
-import { fileURLToPath } from "url";
 import { fileFilter } from "../middlewares/multerFileFilter.js";
 
 /**
- * ESM-safe __dirname
+ * Multer memory storage configuration
+ * Files are stored as Buffer objects in memory (req.file.buffer)
+ * instead of being written to disk
  */
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const storage = multer.memoryStorage();
 
 /**
- * Absolute upload directory (project root /uploads)
- * DO NOT place uploads inside /src
- */
-const uploadDir = path.resolve(process.cwd(), "uploads");
-
-/**
- * Ensure uploads folder exists BEFORE Multer runs
- */
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-  console.log(`Upload folder created at: ${uploadDir}`);
-}
-
-/**
- * Multer disk storage configuration
- */
-const storage = multer.diskStorage({
-  destination: (_req, _file, cb) => {
-    cb(null, uploadDir);
-  },
-
-  filename: (_req, file, cb) => {
-    const ext = path.extname(file.originalname);
-
-    // Sanitize filename
-    const name = path
-      .basename(file.originalname, ext)
-      .toLowerCase()
-      .replace(/\s+/g, "-")
-      .replace(/[^a-z0-9\-]/g, "");
-
-    const timestamp = Date.now();
-    cb(null, `${name}-${timestamp}${ext}`);
-  },
-});
-
-/**
- * Final Multer instance
+ * Final Multer instance with memory storage
+ * Files will be available as Buffer in req.file.buffer or req.files[].buffer
  */
 export const multerUpload = multer({
   storage,
@@ -59,6 +21,20 @@ export const multerUpload = multer({
 });
 
 /**
- * Optional: export uploadDir for static serving
+ * Note: When using memory storage:
+ * - Files are stored in RAM as Buffer objects
+ * - Access uploaded file via: req.file.buffer (single file) or req.files[n].buffer (multiple files)
+ * - No filesystem writes occur
+ * - Better for cloud uploads (Cloudinary, S3, etc.) where you upload directly from buffer
+ * - Be cautious with large files or high traffic as this uses server memory
+ * 
+ * File object structure with memory storage:
+ * {
+ *   fieldname: 'profilePic',
+ *   originalname: 'photo.jpg',
+ *   encoding: '7bit',
+ *   mimetype: 'image/jpeg',
+ *   buffer: <Buffer ...>,  // The actual file data
+ *   size: 12345
+ * }
  */
-export { uploadDir };

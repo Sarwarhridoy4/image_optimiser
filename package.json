@@ -24,11 +24,11 @@
   },
   "peerDependencies": {
     "@types/bcrypt": "^6.0.0",
-    "typescript": "^5"
+    "typescript": "^5.9.3"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
-    "cloudinary": "^2.8.0",
+    "cloudinary": "^2.9.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
