@@ -43,7 +43,7 @@ const UserSignupService = {
 
     let profilePicUrl: string | null = null;
     let certificatePdfUrl: string | null = null;
-    let createdUser: any = null;
+    let createdUser: IUser | null = null;
 
     try {
       session.startTransaction();
@@ -149,9 +149,11 @@ const UserSignupService = {
               supportEmail: "support@image-compress.com",
             },
           });
-        } catch (emailError) {
+           
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (_emailError) {
           // Do NOT break registration if email fails
-          console.error("Welcome email failed:", emailError);
+          // console.error("Welcome email failed:", emailError);
         }
       }
     }
@@ -159,9 +161,9 @@ const UserSignupService = {
   // End of User Registration
 };
 const credentialsLogin = async (payload: Partial<IUser>) => {
-  const { email, password } = payload;
+  const { email, password: userPassword } = payload;
 
-  if (!email || !password) {
+  if (!email || !userPassword) {
     throw new AppError(
       StatusCodes.BAD_REQUEST,
       "Email and password are required"
@@ -176,7 +178,7 @@ const credentialsLogin = async (payload: Partial<IUser>) => {
   }
 
   const isPasswordMatched = await bcrypt.compare(
-    password,
+    userPassword,
     user.password as string
   );
 
@@ -187,7 +189,8 @@ const credentialsLogin = async (payload: Partial<IUser>) => {
   const tokens = createUserTokens(user);
 
   // Remove password before sending response
-  const { password: _removed, ...safeUser } = user.toObject();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { password: _password, ...safeUser } = user.toObject();
 
   return {
     accessToken: tokens.accessToken,

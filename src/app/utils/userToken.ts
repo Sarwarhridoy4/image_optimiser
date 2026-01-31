@@ -43,8 +43,10 @@ export const createNewAccessTokenWithRefreshToken = async (
       refreshToken,
       envConfig.JWT_REFRESH_SECRET
     ) as JwtPayload;
-  } catch (err) {
-    console.error("❌ Invalid refresh token:", err);
+   
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (_err) {
+    // console.error("❌ Invalid refresh token:", err);
     throw new AppError(StatusCodes.UNAUTHORIZED, "Invalid refresh token");
   }
 

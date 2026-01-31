@@ -1,9 +1,13 @@
-// src/types/express/index.d.ts
-declare namespace Express {
-  export interface Request {
-    profilePicBuffer?: Buffer;
-    profilePicFilename?: string;
-    certificatePdfBuffer?: Buffer;
-    certificatePdfFilename?: string;
+import { JwtPayload } from "jsonwebtoken";
+
+declare global {
+  namespace Express {
+    interface Request {
+      user: JwtPayload;
+      profilePicBuffer?: Buffer;
+      certificatePdfBuffer?: Buffer;
+      profilePicFilename?: string;
+      certificatePdfFilename?: string;
+    }
   }
 }

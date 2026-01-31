@@ -2,6 +2,7 @@ import type { UploadApiResponse } from "cloudinary";
 import stream from "stream";
 import AppError from "../errorHelpers/AppError.js";
 import { cloudinaryUpload } from "../config/cloudinary.config.js";
+import envConfig from "../config/env.js";
 
 /**
  * Uploads a raw buffer to Cloudinary using a stream.
@@ -68,14 +69,15 @@ export const uploadBufferToCloudinary = async (
   while (attempt <= maxRetries) {
     try {
       const result = await uploadOnce();
-      console.log(`✅ Uploaded to Cloudinary: ${result.secure_url}`);
+      // console.log(`✅ Uploaded to Cloudinary: ${result.secure_url}`);
       return result;
-    } catch (err) {
+    } catch (_err) {
       attempt++;
-      console.warn(
-        `Cloudinary upload attempt ${attempt} failed: ${(err as Error).message}`
-      );
-      if (attempt > maxRetries) throw err;
+      if (envConfig.NODE_ENV === "development") {
+        // eslint-disable-next-line no-console
+        console.error(`Cloudinary upload attempt ${attempt}/${maxRetries + 1} failed:`, _err);
+      }
+      if (attempt > maxRetries) throw _err;
     }
   }
 
@@ -113,21 +115,20 @@ export const deleteImageFromCloudinary = async (
         result.result
       );
     }
-    console.log(`✅ Cloudinary file deleted: ${public_id}`);
+    // console.log(`✅ Cloudinary file deleted: ${public_id}`);
   };
 
   while (attempt <= maxRetries) {
     try {
       await deleteOnce();
       return;
-    } catch (err) {
+    } catch (_err) {
       attempt++;
-      console.warn(
-        `Cloudinary deletion attempt ${attempt} failed: ${
-          (err as Error).message
-        }`
-      );
-      if (attempt > maxRetries) throw err;
+      if (envConfig.NODE_ENV === "development") {
+        // eslint-disable-next-line no-console
+        console.error(`Cloudinary deletion attempt ${attempt}/${maxRetries + 1} failed:`, _err);
+      }
+      if (attempt > maxRetries) throw _err;
     }
   }
 };

@@ -1,305 +1,115 @@
-# Auth & User API Documentation
+# Image Upload and Optimizer API
 
-This document describes all available authentication and user-related API endpoints, including request formats, validation rules, and example responses.
+This is a robust and scalable API for handling image uploads, compression, and optimization. It provides a secure and efficient way to manage user profiles and associated images, with a focus on performance and developer experience.
 
----
+## Features
 
-## Swagger Docs
+-   **Secure User Authentication**: JWT-based authentication with access and refresh tokens.
+-   **Image Compression**: Compresses uploaded images to WebP format for optimal performance.
+-   **Cloudinary Integration**: Securely uploads and stores images on Cloudinary.
+-   **Database Integration**: Uses MongoDB to store user and profile information.
+-   **API Documentation**: Comprehensive API documentation powered by Swagger.
+-   **Error Handling**: Centralized error handling for consistent and predictable error responses.
+-   **Validation**: Robust request validation using Zod.
+-   **Email Notifications**: Sends welcome emails to new users.
 
-```
+## Technologies Used
 
-http://localhost:5500/api-docs
-https://image-compress-upload.vercel.app/api-docs
-```
+-   **Backend**: Node.js, Express.js, TypeScript
+-   **Database**: MongoDB, Mongoose
+-   **Authentication**: JWT (JSON Web Tokens)
+-   **Image Processing**: Sharp
+-   **File Uploads**: Multer
+-   **Cloud Storage**: Cloudinary
+-   **API Documentation**: Swagger
+-   **Validation**: Zod
+-   **Email**: Nodemailer, EJS
 
-## Base URL
+## Prerequisites
 
-```
-/api/v1
-```
+Before you begin, ensure you have the following installed:
 
----
+-   [Node.js](https://nodejs.org/en/) (v18 or higher)
+-   [Bun](https://bun.sh/) (optional, but recommended)
+-   [MongoDB](https://www.mongodb.com/try/download/community)
 
-## Authentication Endpoints
+## Getting Started
 
-### 1. Register User
-
-**Endpoint**
-
-```
-POST /auth/register
-```
-
-**Description**
-Registers a new user with a profile picture and certificate PDF. Also creates a user profile and sends a welcome email after successful registration.
-
-**Request Type**
-`multipart/form-data`
-
-**Required Fields**
-
-| Field          | Type           | Description          |
-| -------------- | -------------- | -------------------- |
-| name           | string         | User full name       |
-| email          | string (email) | Unique email address |
-| password       | string         | User password        |
-| profilePic     | file (image)   | Profile picture      |
-| certificatePdf | file (PDF)     | Certificate document |
-
-**Example Request (cURL)**
+### 1. Clone the repository
 
 ```bash
-curl -X POST /api/v1/auth/register \
-  -F "name=John Doe" \
-  -F "email=john@example.com" \
-  -F "password=123456" \
-  -F "profilePic=@profile.jpg" \
-  -F "certificatePdf=@certificate.pdf"
+git clone https://github.com/your-username/image-optimiser.git
+cd image-optimiser
 ```
 
-**Success Response**
+### 2. Install dependencies
 
-```json
-{
-  "success": true,
-  "statusCode": 201,
-  "message": "User registered successfully",
-  "data": {
-    "_id": "userId",
-    "name": "John Doe",
-    "email": "john@example.com",
-    "profile": "profileId"
-  }
-}
-```
-
-**Error Responses**
-
-* `400` Validation error or missing files
-* `409` Email already registered
-* `500` Server error
-
----
-
-### 2. Login User
-
-**Endpoint**
-
-```
-POST /auth/login
-```
-
-**Description**
-Authenticates a user using email and password and returns access & refresh tokens.
-
-**Request Type**
-`application/json`
-
-**Request Body**
-
-```json
-{
-  "email": "john@example.com",
-  "password": "123456"
-}
-```
-
-**Success Response**
-
-```json
-{
-  "success": true,
-  "statusCode": 200,
-  "message": "User Login Success",
-  "data": {
-    "accessToken": "jwt-access-token",
-    "refreshToken": "jwt-refresh-token",
-    "user": {
-      "_id": "userId",
-      "name": "John Doe",
-      "email": "john@example.com",
-      "profile": "profileId"
-    }
-  }
-}
-```
-
-**Error Responses**
-
-* `400` Email does not exist
-* `400` Incorrect password
-
----
-
-## User Endpoints
-
-### 3. Get All Users
-
-**Endpoint**
-
-```
-GET /users
-```
-
-**Description**
-Returns a list of all registered users along with their profile information. Passwords are excluded.
-
-**Authentication**
-Required (Access Token)
-
-**Headers**
-
-```
-Authorization: Bearer <accessToken>
-```
-
-**Success Response**
-
-```json
-{
-  "success": true,
-  "statusCode": 200,
-  "message": "Users fetched successfully",
-  "data": [
-    {
-      "_id": "userId",
-      "name": "John Doe",
-      "email": "john@example.com",
-      "profile": {
-        "profilePic": "https://cloudinary.com/...",
-        "certificatePdf": "https://cloudinary.com/..."
-      }
-    }
-  ]
-}
-```
-
-**Error Responses**
-
-* `401` Unauthorized
-* `500` Server error
-
----
-
-## Common Response Format
-
-All APIs follow a standard response format:
-
-```json
-{
-  "success": boolean,
-  "statusCode": number,
-  "message": string,
-  "data": any
-}
-```
-
----
-
-## Notes
-
-* Passwords are hashed using **bcrypt**
-* Files are uploaded to **Cloudinary**
-* Emails are sent using **Nodemailer + EJS templates**
-* MongoDB transactions are used for data consistency
-
----
-
-## Future Enhancements
-
-* Email verification
-* Password reset
-* Role-based access control (RBAC)
-* Pagination & filtering for users list
-
----
-
-**Maintained By:** Backend Team
-
----
-
-## ▶️ Running the Project
-
-You can run this project using **Bun** or **npm**.
-
----
-
-### 🔹 Using Bun (Recommended)
-
-#### 1. Install Bun
-
-```bash
-curl -fsSL https://bun.sh/install | bash
-```
-
-Restart your terminal after installation.
-
-#### 2. Install dependencies
+Using Bun (recommended):
 
 ```bash
 bun install
 ```
 
-#### 3. Setup environment variables
-
-```bash
-cp .env.example .env
-```
-
-Fill in required values (MongoDB, Cloudinary, JWT, Email SMTP).
-
-#### 4. Run in development
-
-```bash
-bun run dev
-```
-
-#### 5. Run in production
-
-```bash
-bun run build
-bun run start
-```
-
----
-
-### 🔹 Using npm
-
-#### 1. Install dependencies
+Using npm:
 
 ```bash
 npm install
 ```
 
-#### 2. Setup environment variables
+### 3. Set up environment variables
 
-```bash
-cp .env.example .env
+Create a `.env` file in the root of the project and add the following environment variables:
+
+```
+# Server Configuration
+PORT=5500
+NODE_ENV=development
+FRONTEND_URL=http://localhost:3000
+
+# MongoDB Configuration
+MONGO_URI=your-mongodb-connection-string
+
+# JWT Configuration
+JWT_ACCESS_SECRET=your-jwt-access-secret
+JWT_REFRESH_SECRET=your-jwt-refresh-secret
+JWT_ACCESS_EXPIRES_IN=1h
+JWT_REFRESH_EXPIRES_IN=7d
+
+# Cloudinary Configuration
+CLOUDINARY_CLOUD_NAME=your-cloudinary-cloud-name
+CLOUDINARY_API_KEY=your-cloudinary-api-key
+CLOUDINARY_API_SECRET=your-cloudinary-api-secret
+
+# Email Configuration
+EMAIL_HOST=your-email-host
+EMAIL_PORT=your-email-port
+EMAIL_USER=your-email-user
+EMAIL_PASS=your-email-pass
 ```
 
-#### 3. Run in development
+### 4. Run the application
+
+Using Bun:
+
+```bash
+bun run dev
+```
+
+Using npm:
 
 ```bash
 npm run dev
 ```
 
-#### 4. Build & run in production
+The application will be running at `http://localhost:5500`.
 
-```bash
-npm run build
-npm run start
-```
+## API Documentation
 
----
+The API documentation is generated using Swagger and is available at:
 
-### 🔹 Default Scripts
+-   **Local**: `http://localhost:5500/api-docs`
+-   **Production**: `https://image-compress-upload.vercel.app/api-docs`
 
-```json
-{
-  "dev": "tsx watch src/server.ts",
-  "build": "tsc",
-  "start": "node dist/server.js"
-}
-```
+## License
 
----
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

@@ -29,7 +29,7 @@ interface EnvConfig {
 // Helper function to check required env vars
 function ensureEnvVar(key: string, value?: string): string {
   if (!value) {
-    console.error(`❌ Missing required environment variable: ${key}`);
+    // console.error(`❌ Missing required environment variable: ${key}`);
     process.exit(1); // Stop execution
   }
   return value;
@@ -59,6 +59,6 @@ const envConfig: EnvConfig = {
   },
 };
 
-console.log("✅ All required environment variables are loaded successfully.");
+// console.log("✅ All required environment variables are loaded successfully.");
 
 export default envConfig;

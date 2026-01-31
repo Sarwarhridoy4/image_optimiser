@@ -1,8 +1,8 @@
 import type { Request, Response, NextFunction } from "express";
 import sharp from "sharp";
 import { PDFDocument } from "pdf-lib";
-import fs from "fs/promises";
 import path from "path";
+import AppError from "../errorHelpers/AppError.js";
 
 export const compressFile = async (
   req: Request,
@@ -12,41 +12,35 @@ export const compressFile = async (
   try {
     if (!req.files) return next();
 
-    const files = req.files as {
-      profilePic?: Express.Multer.File[];
-      certificatePdf?: Express.Multer.File[];
-    };
+    const files = req.files as Express.Multer.File[];
 
-    /* ---------- PROFILE PIC ---------- */
-    if (files.profilePic?.[0]) {
-      const image = files.profilePic[0];
+    for (const file of files) {
+      if (file.mimetype.startsWith("image/")) {
+        try {
+          const compressedBuffer = await sharp(file.buffer)
+            .webp({ quality: 80 })
+            .toBuffer();
 
-      const inputBuffer = await fs.readFile(image.path);
-
-      const compressedBuffer = await sharp(inputBuffer)
-        .webp({ quality: 80 })
-        .toBuffer();
-
-      req.profilePicBuffer = compressedBuffer;
-      req.profilePicFilename = path
-        .basename(image.originalname, path.extname(image.originalname))
-        .toLowerCase()
-        .replace(/\s+/g, "-") + ".webp";
-    }
-
-    /* ---------- CERTIFICATE PDF ---------- */
-    if (files.certificatePdf?.[0]) {
-      const pdf = files.certificatePdf[0];
-
-      const inputBuffer = await fs.readFile(pdf.path);
-
-      const pdfDoc = await PDFDocument.load(inputBuffer);
-      const compressedPdf = await pdfDoc.save({
-        useObjectStreams: true,
-      });
-
-      req.certificatePdfBuffer = Buffer.from(compressedPdf);
-      req.certificatePdfFilename = pdf.originalname;
+          file.buffer = compressedBuffer;
+          file.originalname =
+            path.basename(file.originalname, path.extname(file.originalname)) +
+            ".webp";
+        } catch (error) {
+          const errorMessage = error instanceof Error ? error.message : String(error);
+          return next(new AppError(500, "Image compression failed.", errorMessage));
+        }
+      } else if (file.mimetype === "application/pdf") {
+        try {
+          const pdfDoc = await PDFDocument.load(file.buffer);
+          const compressedPdf = await pdfDoc.save({
+            useObjectStreams: true,
+          });
+          file.buffer = Buffer.from(compressedPdf);
+        } catch (error) {
+          const errorMessage = error instanceof Error ? error.message : String(error);
+          return next(new AppError(500, "PDF compression failed.", errorMessage));
+        }
+      }
     }
 
     next();
@@ -54,4 +48,3 @@ export const compressFile = async (
     next(error);
   }
 };
-

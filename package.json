@@ -7,6 +7,7 @@
     "start": "node dist/server.js",
     "build": "tsc",
     "dev": "nodemon --watch src --ext ts,js --exec \"bun run src/server.ts\"",
+    "lint": "eslint . --ext .ts",
     "seed:admin": "bun run src/app/utils/adminSeeder.ts"
   },
   "devDependencies": {
@@ -17,9 +18,12 @@
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/multer": "^2.0.0",
-    "@types/nodemailer": "^7.0.5",
+    "@types/nodemailer": "^7.0.9",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
+    "@typescript-eslint/eslint-plugin": "^8.54.0",
+    "@typescript-eslint/parser": "^8.54.0",
+    "eslint": "^9.39.2",
     "ts-node-dev": "^2.0.0"
   },
   "peerDependencies": {
@@ -38,7 +42,7 @@
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.1.5",
     "multer": "^2.0.2",
-    "nodemailer": "^7.0.12",
+    "nodemailer": "^7.0.13",
     "nodemon": "^3.1.11",
     "pdf-lib": "^1.17.1",
     "sharp": "^0.34.5",
