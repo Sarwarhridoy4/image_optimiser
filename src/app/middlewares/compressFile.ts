@@ -12,9 +12,11 @@ export const compressFile = async (
   try {
     if (!req.files) return next();
 
-    const files = req.files as Express.Multer.File[];
+    const allFiles: Express.Multer.File[] = Object.values(req.files)
+      .flat()
+      .filter((file): file is Express.Multer.File => file !== undefined);
 
-    for (const file of files) {
+    for (const file of allFiles) {
       if (file.mimetype.startsWith("image/")) {
         try {
           const compressedBuffer = await sharp(file.buffer)
