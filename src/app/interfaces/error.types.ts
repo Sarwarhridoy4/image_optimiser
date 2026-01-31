@@ -8,3 +8,7 @@ export interface TGenericErrorResponse {
   message: string;
   errorSources?: TErrorSources[];
 }
+
+export interface ICastError {
+  path?: string;
+}

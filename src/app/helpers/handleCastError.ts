@@ -1,19 +1,16 @@
 import type {
-  TGenericErrorResponse,
+  ICastError,
   TErrorSources,
+  TGenericErrorResponse,
 } from "../interfaces/error.types.js";
 
-interface ICastError extends Error {
-  path?: string;
-  value?: unknown;
-  kind?: string;
-}
-
 export const handleCastError = (err: ICastError): TGenericErrorResponse => {
+  const path = err.path ?? "unknown";
+
   const errorSources: TErrorSources[] = [
     {
-      path: err.path,
-      message: "Invalid Value for " + err.path,
+      path,
+      message: `Invalid value for ${path}`,
     },
   ];
 
@@ -23,4 +20,3 @@ export const handleCastError = (err: ICastError): TGenericErrorResponse => {
     errorSources,
   };
 };
-
