@@ -105,6 +105,8 @@ The application will be running at `http://localhost:5500`.
 
 ## API Documentation
 
+For a detailed breakdown of API endpoints, authentication, and usage, please refer to the [API Documentation](API.md).
+
 The API documentation is generated using Swagger and is available at:
 
 -   **Local**: `http://localhost:5500/api-docs`
